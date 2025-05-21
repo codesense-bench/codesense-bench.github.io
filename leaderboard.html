@@ -1,118 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CodeSense Leaderboard</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #f6f8fa;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      color: #2f363d;
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      color: #2ea44f;
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .leaderboard-section {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      width: 100%;
-      max-width: 900px;
-      overflow-x: auto;
-      margin-bottom: 2rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead {
-      background-color: #2ea44f;
-      color: white;
-    }
-
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e1e4e8;
-    }
-
-    @media (max-width: 600px) {
-      th, td {
-        padding: 0.75rem;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    <title>Model Leaderboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-  <h1>🚧 Leaderboard Coming Soon</h1>
-
-  <!-- Task 1 -->
-  <h2>Task: Statement Prediction</h2>
-  <div class="leaderboard-section">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Model</th>
-          <th>Accuracy</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Model</th>
+                <th>Accuracy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3">Loading data...</td>
+            </tr>
+        </tbody>
     </table>
-  </div>
 
-  <!-- Task 2 -->
-  <h2>Task: Block Prediction</h2>
-  <div class="leaderboard-section">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Model</th>
-          <th>F1 Score</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
+    <script>
+        async function loadCSV() {
+            try {
+                const response = await fetch('./Data/Statement_Accuracy_Python.csv');
+                const csv = await response.text();
+                const rows = csv.split('\n').slice(1);
+                
+                document.querySelector('#leaderboard tbody').innerHTML = rows
+                    .filter(row => row.trim())
+                    .map(row => {
+                        const [rank, model, accuracy] = row.split(',');
+                        return `
+                            <tr>
+                                <td>${rank.trim()}</td>
+                                <td>${model.trim()}</td>
+                                <td>${(parseFloat(accuracy.trim()) * 100).toFixed(2)}%</td>
+                            </tr>
+                        `;
+                    })
+                    .join('');
+                    
+            } catch (error) {
+                document.querySelector('#leaderboard tbody').innerHTML = `
+                    <tr>
+                        <td colspan="3" style="color: red; text-align: center;">
+                            Error loading data: ${error.message}
+                        </td>
+                    </tr>`;
+            }
+        }
 
-  <!-- Task 3 -->
-  <h2>Task: Branch Prediction</h2>
-  <div class="leaderboard-section">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Model</th>
-          <th>Accuracy</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
-
+        window.addEventListener('DOMContentLoaded', loadCSV);
+    </script>
 </body>
 </html>
