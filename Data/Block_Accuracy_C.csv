@@ -1,0 +1,15 @@
+Model,Block 1 Accuracy,Block 2 Accuracy,Block 3 Accuracy
+Llama-3.1-8B-Instruct,0.153846153846154,0.18,0.116666666666667
+Qwen2.5-14B-Instruct-1M,0.192307692307692,0.2,0.15
+Qwen2.5-Coder-7B-Instruct,0.192307692307692,0.22,0.183333333333333
+DeepSeek-Coder-V2-Lite-Instruct,0.192307692307692,0.16,0.133333333333333
+Phi-4-mini-instruct,0.153846153846154,0.22,0.166666666666667
+Phi-3.5-mini-instruct,0.134615384615385,0.2,0.1
+granite-3.2-8b-instruct,0.0,0.02,0.0
+DeepSeek-R1-Distill-Qwen-7B,0.153846153846154,0.16,0.15
+DeepSeek-R1-Distill-Llama-8B,0.153846153846154,0.14,0.166666666666667
+DeepSeek-R1-Distill-Qwen-14B,0.192307692307692,0.22,0.15
+granite-3.2-8b-instruct-preview,0.0,0.02,0.0166666666666667
+gpt-4o-mini,0.225,0.25,0.175
+anthropic.claude-3-5-sonnet-20241022-v2:0,0.275,0.25,0.1
+gemini-1.5-flash-002,0.125,0.225,0.125

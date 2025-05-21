@@ -1,0 +1,15 @@
+Rank,Model,accuracy
+1,Phi-4-mini-instruct,0.552208835341365
+2,DeepSeek-R1-Distill-Qwen-14B,0.538152610441767
+3,anthropic.claude-3-5-sonnet-20241022-v2:0,0.486338797814208
+4,Qwen2.5-14B-Instruct-1M,0.483935742971888
+5,gemini-1.5-flash-002,0.483695652173913
+6,Llama-3.1-8B-Instruct,0.469879518072289
+7,DeepSeek-R1-Distill-Qwen-7B,0.467871485943775
+8,gpt-4o-mini,0.448087431693989
+9,DeepSeek-Coder-V2-Lite-Instruct,0.393574297188755
+10,Phi-3.5-mini-instruct,0.381526104417671
+11,DeepSeek-R1-Distill-Llama-8B,0.379518072289157
+12,Qwen2.5-Coder-7B-Instruct,0.373493975903614
+13,granite-3.2-8b-instruct-preview,0.271084337349398
+14,granite-3.2-8b-instruct,0.232931726907631

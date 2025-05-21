@@ -1,73 +1,442 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Model Leaderboard</title>
+    <title>CodeSense Leaderboard</title>
     <style>
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Main Header */
+        .main-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+
+        /* Content Blocks */
+        .content-block {
+            max-width: 1600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .block-title {
+            font-size: 2rem;
+            text-align: center;
+            margin: 0 auto 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #4CAF50;
+            width: fit-content;
+        }
+
+        /* Tables Container */
+        .tables-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 2rem;
+            flex: 1;
+            min-width: 400px;
+            transition: transform 0.2s ease;
+        }
+
+        .table-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #4CAF50;
+            margin: 0 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        /* Table Styles */
         table {
-            border-collapse: collapse;
             width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
+            border-collapse: collapse;
+            margin: 0 auto;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+
         th {
             background-color: #4CAF50;
             color: white;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .accuracy {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2rem;
+            }
+
+            .block-title {
+                font-size: 1.6rem;
+            }
+
+            .content-block {
+                padding: 0 1rem;
+            }
+
+            .table-section {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+
+        /* Loading and Error States */
+        .loading {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 1rem;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <table id="leaderboard">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Model</th>
-                <th>Accuracy</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="3">Loading data...</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Main Header -->
+    <header class="main-header">
+        <h1>CodeSense Leaderboard</h1>
+    </header>
 
-    <script>
-        async function loadCSV() {
-            try {
-                const response = await fetch('./Data/Statement_Accuracy_Python.csv');
-                const csv = await response.text();
-                const rows = csv.split('\n').slice(1);
-                
-                document.querySelector('#leaderboard tbody').innerHTML = rows
-                    .filter(row => row.trim())
-                    .map(row => {
-                        const [rank, model, accuracy] = row.split(',');
-                        return `
+    <!-- Statement Accuracy Block -->
+    <section class="content-block">
+        <h2 class="block-title">Statement Accuracy Results</h2>
+        <div class="tables-container">
+            <!-- Python Section -->
+            <div class="table-section">
+                <h3 class="section-title">Python</h3>
+                <table id="python-leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- C Section -->
+            <div class="table-section">
+                <h3 class="section-title">C Language</h3>
+                <table id="c-leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+        <section class="content-block">
+        <h2 class="block-title">Block Accuracy Results</h2>
+        <div class="tables-container">
+            <!-- Python Block Accuracy -->
+            <div class="table-section">
+                <h3 class="section-title">Python</h3>
+                <table id="block-python">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Block 1</th>
+                            <th>Block 2</th>
+                            <th>Block 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- C Block Accuracy -->
+            <div class="table-section">
+                <h3 class="section-title">C Language</h3>
+                <table id="block-c">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Block 1</th>
+                            <th>Block 2</th>
+                            <th>Block 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-block">
+            <h2 class="block-title">Code Property Accuracy</h2>
+            <div class="tables-container">
+                <!-- Alias & Branch Table -->
+                <div class="table-section">
+                    <h3 class="section-title">Alias & Branch</h3>
+                    <table id="alias-branch">
+                        <thead>
                             <tr>
-                                <td>${rank.trim()}</td>
-                                <td>${model.trim()}</td>
-                                <td>${(parseFloat(accuracy.trim()) * 100).toFixed(2)}%</td>
+                                <th>Model</th>
+                                <th>Alias Accuracy</th>
+                                <th>Conditional Accuracy</th>
                             </tr>
-                        `;
-                    })
-                    .join('');
-                    
-            } catch (error) {
-                document.querySelector('#leaderboard tbody').innerHTML = `
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="loading">Loading Alias data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Loop Results Table -->
+                <div class="table-section">
+                    <h3 class="section-title">Loop Results</h3>
+                    <table id="loop-results">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Iteration</th>
+                                <th>In-Loop</th>
+                                <th>Post-Loop</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="loading">Loading Loop data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+<section class="content-block">
+    <h2 class="block-title">Input/Output Prediction</h2>
+    <div class="tables-container">
+        <!-- Output Prediction Table -->
+        <div class="table-section">
+            <h3 class="section-title">Output Prediction</h3>
+            <table id="output-prediction">
+                <thead>
                     <tr>
-                        <td colspan="3" style="color: red; text-align: center;">
-                            Error loading data: ${error.message}
+                        <th>Model</th>
+                        <th>Python</th>
+                        <th>C</th>
+                        <th>Java</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="loading">Loading Output data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Input Prediction Table -->
+        <div class="table-section">
+            <h3 class="section-title">Input Prediction</h3>
+            <table id="input-prediction">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Python</th>
+                        <th>C</th>
+                        <th>Java</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="loading">Loading Input data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Add New Blocks Here -->
+    <!--
+    <section class="content-block">
+        <h2 class="block-title">Code Completion Results</h2>
+        <div class="tables-container">
+            <div class="table-section">
+                <h3 class="section-title">Python</h3>
+                <table id="completion-python">
+                    ...
+                </table>
+            </div>
+        </div>
+    </section>
+    -->
+
+<script>
+        // Enhanced loadCSV function to handle multiple formats
+        async function loadCSV(url, tableId, type = 'statement') {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const csv = await response.text();
+                const rows = csv.split('\n').filter(row => row.trim());
+                const headers = rows.shift().split(',');
+
+                const tbody = document.querySelector(`#${tableId} tbody`);
+                const thCount = document.querySelectorAll(`#${tableId} thead th`).length;
+
+                tbody.innerHTML = rows.map(row => {
+                    const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
+                    
+                    switch(type) {
+                        case 'statement':
+                            return `
+                                <tr>
+                                    <td>${cells[0]}</td>
+                                    <td>${cells[1]}</td>
+                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                                </tr>
+                            `;
+                        case 'block':
+                            return `
+                                <tr>
+                                    <td>${cells[0]}</td>
+                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
+                                </tr>
+                            `;
+                        case 'alias':
+                            return `
+                                <tr>
+                                    <td>${cells[0]}</td>
+                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                                </tr>
+                            `;
+                        case 'loop':
+                            return `
+                                <tr>
+                                    <td>${cells[0]}</td>
+                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
+                                </tr>
+                            `;
+                        case 'io':
+                            return `
+                                <tr>
+                                    <td>${cells[0]}</td>
+                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
+                                </tr>
+                            `;
+                        default:
+                            return '';
+                    }
+                }).join('');
+
+            } catch (error) {
+                const tbody = document.querySelector(`#${tableId} tbody`);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${thCount}" class="error">
+                            ${error.message}<br>
+                            <small>Check: 1. File path 2. CSV format 3. Network connection</small>
                         </td>
                     </tr>`;
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadCSV);
+        // Load all data
+        window.addEventListener('DOMContentLoaded', () => {
+            // Statement Accuracy
+            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_Python.csv', 'python-leaderboard', 'statement');
+            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_C.csv', 'c-leaderboard', 'statement');
+            
+            // Block Accuracy
+            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_Python.csv', 'block-python', 'block');
+            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_C.csv', 'block-c', 'block');
+            
+            // Code Property Accuracy
+            loadCSV('https://codesense-bench.github.io/Data/alias_branch.csv', 'alias-branch', 'alias');
+            loadCSV('https://codesense-bench.github.io/Data/loop_results.csv', 'loop-results', 'loop');
+
+            loadCSV('https://codesense-bench.github.io/Data/output.csv', 'output-prediction', 'io');
+            loadCSV('https://codesense-bench.github.io/Data/input.csv', 'input-prediction', 'io');
+        });
     </script>
 </body>
 </html>
