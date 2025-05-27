@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Property Leaderboard</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Main Header */
+        .main-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+
+        /* Content Blocks */
+        .content-block {
+            max-width: 1600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .block-title {
+            font-size: 2rem;
+            text-align: center;
+            margin: 0 auto 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #4CAF50;
+            width: fit-content;
+        }
+
+        /* Tables Container */
+        .tables-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 2rem;
+            flex: 1;
+            min-width: 400px;
+            transition: transform 0.2s ease;
+        }
+
+        .table-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #4CAF50;
+            margin: 0 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .accuracy {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2rem;
+            }
+
+            .block-title {
+                font-size: 1.6rem;
+            }
+
+            .content-block {
+                padding: 0 1rem;
+            }
+
+            .table-section {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+
+        /* Loading and Error States */
+        .loading {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 1rem;
+            font-weight: 500;
+        }
+                .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .button-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <h1>Aliasing, Branch and Loop Property accuracies</h1>
+    </header>
+
+    <section class="content-block">
+        <h2 class="block-title">Code Property Accuracy</h2>
+        <div class="tables-container">
+            <!-- Alias Table -->
+            <div class="table-section">
+                <h3 class="section-title">Alias Accuracy</h3>
+                <table id="alias-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Alias Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Alias data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Branch Table -->
+            <div class="table-section">
+                <h3 class="section-title">Branch Accuracy</h3>
+                <table id="branch-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Branch Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Branch data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loop Results Table -->
+            <div class="table-section">
+                <h3 class="section-title">Loop Results</h3>
+                <table id="loop-results">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Iteration</th>
+                            <th>In-Loop</th>
+                            <th>Post-Loop</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading Loop data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="content-block" style="text-align: center; margin-top: 3rem; padding-bottom: 2rem;">
+        <a href="leaderboard.html" class="nav-button" 
+           style="padding: 1rem 2rem; 
+                  display: inline-block;
+                  background: #4CAF50;
+                  color: white;
+                  border-radius: 8px;
+                  text-decoration: none;
+                  transition: transform 0.2s ease;">
+             Back to Main Leaderboard
+        </a>
+    </div>
+
+
+    <script>
+        async function loadCSV(url, tableId, type = 'statement') {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const csv = await response.text();
+                const rows = csv.split('\n').filter(row => row.trim());
+                const headers = rows.shift().split(',');
+
+                if (type === 'alias_branch') {
+                    // Process alias and branch data
+                    const aliasTable = document.getElementById('alias-table');
+                    const branchTable = document.getElementById('branch-table');
+                    
+                    let aliasData = [];
+                    let branchData = [];
+
+                    rows.forEach(row => {
+                        const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
+                        const model = cells[0];
+                        const aliasAcc = parseFloat(cells[1]);
+                        const branchAcc = parseFloat(cells[2]);
+
+                        aliasData.push({ model, accuracy: aliasAcc });
+                        branchData.push({ model, accuracy: branchAcc });
+                    });
+
+                    // Sort and rank data
+                    const processAndDisplay = (data, table, isAlias = true) => {
+                        data.sort((a, b) => b.accuracy - a.accuracy);
+                        data = data.map((item, index) => ({ ...item, rank: index + 1 }));
+                        
+                        table.dataSet = data;
+                        const tbody = table.querySelector('tbody');
+                        tbody.innerHTML = data.map(item => `
+                            <tr>
+                                <td>${item.rank}</td>
+                                <td>${item.model}</td>
+                                <td class="accuracy">${(item.accuracy * 100).toFixed(2)}%</td>
+                            </tr>
+                        `).join('');
+
+                        // Add sorting functionality
+                        table.querySelectorAll('thead th').forEach((th, index) => {
+                            if (index === 0) return;
+                            th.style.cursor = 'pointer';
+                            th.addEventListener('click', () => sortTable(table, index, th));
+                        });
+                    };
+
+                    processAndDisplay(aliasData, aliasTable);
+                    processAndDisplay(branchData, branchTable, false);
+
+                } else if (type === 'loop') {
+                    const table = document.getElementById(tableId);
+                    const tbody = table.querySelector('tbody');
+                    
+                    let loopData = rows.map(row => {
+                        const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
+                        return {
+                            model: cells[0],
+                            iteration: parseFloat(cells[1]),
+                            inLoop: parseFloat(cells[2]),
+                            postLoop: parseFloat(cells[3]),
+                            average: (parseFloat(cells[1]) + parseFloat(cells[2]) + parseFloat(cells[3])) / 3
+                        };
+                    });
+
+                    // Sort by average and rank
+                    loopData.sort((a, b) => b.average - a.average);
+                    loopData = loopData.map((item, index) => ({ ...item, rank: index + 1 }));
+                    
+                    table.dataSet = loopData;
+                    tbody.innerHTML = loopData.map(item => `
+                        <tr>
+                            <td>${item.rank}</td>
+                            <td>${item.model}</td>
+                            <td class="accuracy">${(item.iteration * 100).toFixed(2)}%</td>
+                            <td class="accuracy">${(item.inLoop * 100).toFixed(2)}%</td>
+                            <td class="accuracy">${(item.postLoop * 100).toFixed(2)}%</td>
+                        </tr>
+                    `).join('');
+
+                    // Add sorting functionality
+                    table.querySelectorAll('thead th').forEach((th, index) => {
+                        if (index === 0) return;
+                        th.style.cursor = 'pointer';
+                        th.addEventListener('click', () => sortTable(table, index, th));
+                    });
+                }
+
+            } catch (error) {
+                const tbody = document.querySelector(`#${tableId} tbody`);
+                const thCount = document.querySelectorAll(`#${tableId} thead th`).length;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${thCount}" class="error">
+                            ${error.message}<br>
+                            <small>Check: 1. File path 2. CSV format 3. Network connection</small>
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        function sortTable(table, columnIndex, th) {
+            const dataSet = [...table.dataSet];
+            const isModelColumn = columnIndex === 1;
+            const currentSort = th.classList.contains('asc') ? 'asc' : 
+                              th.classList.contains('desc') ? 'desc' : null;
+
+            let newDirection = 'asc';
+            if (currentSort === 'asc') newDirection = 'desc';
+            else if (currentSort === 'desc') newDirection = null;
+            else newDirection = isModelColumn ? 'asc' : 'desc';
+
+            table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
+
+            if (newDirection) {
+                th.classList.add(newDirection);
+                dataSet.sort((a, b) => {
+                    let valA, valB;
+                    switch (columnIndex) {
+                        case 1: // Model column
+                            valA = a.model.toLowerCase();
+                            valB = b.model.toLowerCase();
+                            return newDirection === 'asc' ? 
+                                valA.localeCompare(valB) : valB.localeCompare(valA);
+                        case 2: // First data column
+                            valA = table.id === 'loop-results' ? a.iteration : a.accuracy;
+                            valB = table.id === 'loop-results' ? b.iteration : b.accuracy;
+                            break;
+                        case 3: // Second data column (loop only)
+                            valA = a.inLoop;
+                            valB = b.inLoop;
+                            break;
+                        case 4: // Third data column (loop only)
+                            valA = a.postLoop;
+                            valB = b.postLoop;
+                            break;
+                    }
+                    return newDirection === 'asc' ? valA - valB : valB - valA;
+                });
+            } else {
+                dataSet.sort((a, b) => a.rank - b.rank);
+            }
+
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = dataSet.map(item => {
+                if (table.id === 'loop-results') {
+                    return `
+                        <tr>
+                            <td>${item.rank}</td>
+                            <td>${item.model}</td>
+                            <td class="accuracy">${(item.iteration * 100).toFixed(2)}%</td>
+                            <td class="accuracy">${(item.inLoop * 100).toFixed(2)}%</td>
+                            <td class="accuracy">${(item.postLoop * 100).toFixed(2)}%</td>
+                        </tr>
+                    `;
+                }
+                return `
+                    <tr>
+                        <td>${item.rank}</td>
+                        <td>${item.model}</td>
+                        <td class="accuracy">${(item.accuracy * 100).toFixed(2)}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCSV('./Data/alias_branch.csv', 'alias-table', 'alias_branch');
+            loadCSV('./Data/loop_results.csv', 'loop-results', 'loop');
+        });
+
+        // Add sorting style
+        // const style = document.createElement('style');
+        // style.textContent = `
+        //     th {
+        //         position: relative;
+        //         padding-right: 20px;
+        //     }
+        //     th.asc::after {
+        //         content: '↑';
+        //         position: absolute;
+        //         right: 5px;
+        //     }
+        //     th.desc::after {
+        //         content: '↓';
+        //         position: absolute;
+        //         right: 5px;
+        //     }
+        // `;
+        // document.head.appendChild(style);
+    </script>
+</body>
+</html>

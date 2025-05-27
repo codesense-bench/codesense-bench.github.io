@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CodeSense Leaderboard</title>
+    <title>Statement Accuracy Leaderboard</title>
     <style>
         /* Base Styles */
         body {
@@ -140,14 +140,13 @@
             padding: 1rem;
             font-weight: 500;
         }
-        .nav-container {
-            display: flex;
-            justify-content: center;
+                .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            flex-wrap: nowrap; 
-            overflow-x: auto;  
-            padding: 0 2rem;
+            max-width: 1200px;
             margin: 3rem auto;
+            padding: 0 2rem;
         }
 
         .nav-button {
@@ -180,44 +179,71 @@
 </head>
 
 <body>
+
     <header class="main-header">
-        <h1>CodeSense Leaderboard</h1>
+        <h1>Statement Accuracy</h1>
     </header>
 
-    <div class="nav-container">
-        <a href="statement.html" class="nav-button">
-            <div>
-                <div>Statement Accuracy</div>
-                <div class="button-description">Python & C Language Results</div>
-            </div>
-        </a>
-        
-        <a href="block.html" class="nav-button">
-            <div>
-                <div>Block Accuracy</div>
-                <div class="button-description">Code Block Analysis</div>
-            </div>
-        </a>
 
-        <a href="property.html" class="nav-button">
-            <div>
-                <div>Code Properties</div>
-                <div class="button-description">Alias, Branch & Loop Analysis</div>
-            </div>
-        </a>
+    <section class="content-block">
+        <h2 class="block-title">Statement Accuracy Results</h2>
+        <div class="tables-container">
 
-        <a href="io.html" class="nav-button">
-            <div>
-                <div>Input/Output</div>
-                <div class="button-description">Prediction Accuracy</div>
+            <div class="table-section">
+                <h3 class="section-title">Python</h3>
+                <table id="python-leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+
+
+            <div class="table-section">
+                <h3 class="section-title">C Language</h3>
+                <table id="c-leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="content-block" style="text-align: center; margin-top: 3rem; padding-bottom: 2rem;">
+        <a href="leaderboard.html" class="nav-button" 
+           style="padding: 1rem 2rem; 
+                  display: inline-block;
+                  background: #4CAF50;
+                  color: white;
+                  border-radius: 8px;
+                  text-decoration: none;
+                  transition: transform 0.2s ease;">
+             Back to Main Leaderboard
         </a>
     </div>
-</body>
-</html>
 
-<!-- <script>
-        // Enhanced loadCSV function to handle multiple formats
+
+    <script>
         async function loadCSV(url, tableId, type = 'statement') {
             try {
                 const response = await fetch(url);
@@ -233,53 +259,13 @@
                 tbody.innerHTML = rows.map(row => {
                     const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
                     
-                    switch(type) {
-                        case 'statement':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td>${cells[1]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'block':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'alias':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'loop':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'io':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        default:
-                            return '';
-                    }
+                    return `
+                        <tr>
+                            <td>${cells[0]}</td>
+                            <td>${cells[1]}</td>
+                            <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
+                        </tr>
+                    `;
                 }).join('');
 
             } catch (error) {
@@ -294,23 +280,12 @@
             }
         }
 
-        // Load all data
+        // Load data when page loads
         window.addEventListener('DOMContentLoaded', () => {
-            // Statement Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_Python.csv', 'python-leaderboard', 'statement');
-            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_C.csv', 'c-leaderboard', 'statement');
-            
-            // Block Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_Python.csv', 'block-python', 'block');
-            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_C.csv', 'block-c', 'block');
-            
-            // Code Property Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/alias_branch.csv', 'alias-branch', 'alias');
-            loadCSV('https://codesense-bench.github.io/Data/loop_results.csv', 'loop-results', 'loop');
-
-            loadCSV('https://codesense-bench.github.io/Data/output.csv', 'output-prediction', 'io');
-            loadCSV('https://codesense-bench.github.io/Data/input.csv', 'input-prediction', 'io');
+            // Use absolute paths for GitHub Pages
+            loadCSV('./Data/Statement_Accuracy_Python.csv', 'python-leaderboard');
+            loadCSV('./Data/Statement_Accuracy_C.csv', 'c-leaderboard');
         });
     </script>
 </body>
-</html> -->
+</html>

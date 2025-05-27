@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Block Based Leaderboard</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Main Header */
+        .main-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+
+        /* Content Blocks */
+        .content-block {
+            max-width: 1600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .block-title {
+            font-size: 2rem;
+            text-align: center;
+            margin: 0 auto 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #4CAF50;
+            width: fit-content;
+        }
+
+        /* Tables Container */
+        .tables-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 2rem;
+            flex: 1;
+            min-width: 400px;
+            transition: transform 0.2s ease;
+        }
+
+        .table-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #4CAF50;
+            margin: 0 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .accuracy {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2rem;
+            }
+
+            .block-title {
+                font-size: 1.6rem;
+            }
+
+            .content-block {
+                padding: 0 1rem;
+            }
+
+            .table-section {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+
+        /* Loading and Error States */
+        .loading {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 1rem;
+            font-weight: 500;
+        }
+                .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .button-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <h1>Block-Based Statement Accuracy</h1>
+    </header>
+
+    <section class="content-block">
+        <h2 class="block-title">Block Accuracy Results</h2>
+        <div class="tables-container">
+            <!-- Python Block Accuracy -->
+            <div class="table-section">
+                <h3 class="section-title">Python</h3>
+                <table id="block-python">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Block 1 Statement Accuracy</th>
+                            <th>Block 2 Statement Accuracy</th>
+                            <th>Block 3 Statement Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- C Block Accuracy -->
+            <div class="table-section">
+                <h3 class="section-title">C Language</h3>
+                <table id="block-c">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Block 1 Statement Accuracy</th>
+                            <th>Block 2 Statement Accuracy</th>
+                            <th>Block 3 Statement Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-block" style="text-align: center; margin-top: 3rem; padding-bottom: 2rem;">
+        <a href="leaderboard.html" class="nav-button" 
+           style="padding: 1rem 2rem; 
+                  display: inline-block;
+                  background: #4CAF50;
+                  color: white;
+                  border-radius: 8px;
+                  text-decoration: none;
+                  transition: transform 0.2s ease;">
+             Back to Main Leaderboard
+        </a>
+    </div>
+
+    <script>
+        async function loadCSV(url, tableId) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const csv = await response.text();
+                const rows = csv.split('\n').filter(row => row.trim());
+                rows.shift(); // Remove header row
+
+                const table = document.getElementById(tableId);
+                const tbody = table.querySelector('tbody');
+                const thCount = table.querySelectorAll('thead th').length;
+
+                // Parse data and calculate averages
+                let dataSet = rows.map(row => {
+                    const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
+                    const [model, b1, b2, b3] = cells.map((c, i) => i > 0 ? parseFloat(c) : c);
+                    const average = (b1 + b2 + b3) / 3;
+                    return { model, b1, b2, b3, average };
+                });
+
+                // Sort by average descending and assign ranks
+                dataSet.sort((a, b) => b.average - a.average);
+                dataSet = dataSet.map((item, index) => ({ ...item, rank: index + 1 }));
+
+                // Store dataset on table element for sorting
+                table.dataSet = dataSet;
+
+                // Generate initial sorted view
+                tbody.innerHTML = dataSet.map(item => `
+                    <tr>
+                        <td>${item.rank}</td>
+                        <td>${item.model}</td>
+                        <td class="accuracy">${(item.b1 * 100).toFixed(2)}%</td>
+                        <td class="accuracy">${(item.b2 * 100).toFixed(2)}%</td>
+                        <td class="accuracy">${(item.b3 * 100).toFixed(2)}%</td>
+                    </tr>
+                `).join('');
+
+                // Add sorting functionality to headers
+                table.querySelectorAll('thead th').forEach((th, index) => {
+                    if (index === 0) return; // Skip rank column
+                    th.style.cursor = 'pointer';
+                    th.addEventListener('click', () => sortTable(table, index, th));
+                });
+
+            } catch (error) {
+                const tbody = document.querySelector(`#${tableId} tbody`);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${thCount}" class="error">
+                            ${error.message}<br>
+                            <small>Check: 1. File path 2. CSV format 3. Network connection</small>
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        function sortTable(table, columnIndex, th) {
+            const dataSet = [...table.dataSet];
+            const isModelColumn = columnIndex === 1;
+            const currentSort = th.classList.contains('asc') ? 'asc' : 
+                              th.classList.contains('desc') ? 'desc' : null;
+
+            // Determine new sort direction
+            let newDirection = 'asc';
+            if (currentSort === 'asc') newDirection = 'desc';
+            else if (currentSort === 'desc') newDirection = null;
+            else newDirection = isModelColumn ? 'asc' : 'desc';
+
+            // Clear existing sort indicators
+            table.querySelectorAll('th').forEach(h => {
+                h.classList.remove('asc', 'desc');
+            });
+
+            // Sort dataset
+            if (newDirection) {
+                th.classList.add(newDirection);
+                dataSet.sort((a, b) => {
+                    let valA, valB;
+                    switch (columnIndex) {
+                        case 1: // Model column
+                            valA = a.model.toLowerCase();
+                            valB = b.model.toLowerCase();
+                            return newDirection === 'asc' ? 
+                                valA.localeCompare(valB) : valB.localeCompare(valA);
+                        case 2: // Block 1
+                            valA = a.b1; valB = b.b1; break;
+                        case 3: // Block 2
+                            valA = a.b2; valB = b.b2; break;
+                        case 4: // Block 3
+                            valA = a.b3; valB = b.b3; break;
+                    }
+                    return newDirection === 'asc' ? valA - valB : valB - valA;
+                });
+            } else {
+                // Reset to original ranking
+                dataSet.sort((a, b) => a.rank - b.rank);
+            }
+
+            // Update table body
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = dataSet.map(item => `
+                <tr>
+                    <td>${item.rank}</td>
+                    <td>${item.model}</td>
+                    <td class="accuracy">${(item.b1 * 100).toFixed(2)}%</td>
+                    <td class="accuracy">${(item.b2 * 100).toFixed(2)}%</td>
+                    <td class="accuracy">${(item.b3 * 100).toFixed(2)}%</td>
+                </tr>
+            `).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCSV('/Data/Block_Accuracy_Python.csv', 'block-python');
+            loadCSV('/Data/Block_Accuracy_C.csv', 'block-c');
+        });
+    </script>
+
+    <!-- <style>
+        th {
+            position: relative;
+            padding-right: 20px;
+        }
+        th.asc::after {
+            content: "↑";
+            position: absolute;
+            right: 5px;
+        }
+        th.desc::after {
+            content: "↓";
+            position: absolute;
+            right: 5px;
+        }
+    </style> -->
+</body>
+</html>
