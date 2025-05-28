@@ -1,49 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeSense Leaderboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Base Styles */
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+        :root {
+            --primary-green: #4CAF50;
+            --dark-blue: #2c3e50;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #7f8c8d;
+            --error-red: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-blue);
+            line-height: 1.6;
         }
 
-        /* Main Header */
         .main-header {
             text-align: center;
             padding: 4rem 2rem;
-            background: linear-gradient(135deg, #4CAF50, #2c3e50);
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-blue));
             color: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
         }
 
         .main-header h1 {
             margin: 0;
-            font-size: 3rem;
-            letter-spacing: 2px;
+            font-size: 3.2rem;
+            letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Tab Navigation */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .tab-button {
+            background: white;
+            color: var(--dark-blue);
+            padding: 1.1rem 1.8rem;
+            border-radius: 10px;
+            text-decoration: none;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
         }
 
-        /* Content Blocks */
-        .content-block {
+        .tab-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-button.active {
+            background: var(--primary-green);
+            color: white;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .tab-button i {
+            font-size: 1.2rem;
+        }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
             max-width: 1600px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .block-title {
-            font-size: 2rem;
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-header {
             text-align: center;
-            margin: 0 auto 3rem;
+            margin: 2rem 0 3rem;
+            position: relative;
+        }
+        
+        .content-header h2 {
+            font-size: 2.2rem;
+            margin: 0 auto 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 3px solid #4CAF50;
-            width: fit-content;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .content-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--primary-green), transparent);
+            border-radius: 2px;
+        }
+        
+        .content-description {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            line-height: 1.7;
         }
 
         /* Tables Container */
@@ -57,260 +177,948 @@
         /* Table Section */
         .table-section {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 2rem;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            padding: 2.2rem;
             flex: 1;
             min-width: 400px;
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .table-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-green), var(--dark-blue));
         }
 
         .table-section:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         }
 
         .section-title {
-            font-size: 1.4rem;
-            color: #4CAF50;
-            margin: 0 0 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #e0e0e0;
+            font-size: 1.5rem;
+            color: var(--dark-blue);
+            margin: 0 0 1.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .section-title i {
+            color: var(--primary-green);
         }
 
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 0 auto;
+            font-size: 0.90rem;
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: var(--primary-green);
             color: white;
-            padding: 14px;
+            padding: 15px 14px;
             text-align: left;
             font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        th:first-child {
+            border-top-left-radius: 8px;
+        }
+        
+        th:last-child {
+            border-top-right-radius: 8px;
         }
 
         td {
-            padding: 12px;
+            padding: 13px 14px;
             border-bottom: 1px solid #ececec;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
         }
 
         tr:nth-child(even) {
             background-color: #fafafa;
         }
+        
+        tr:hover {
+            background-color: #f0f7f0;
+        }
 
         .accuracy {
             font-family: 'Courier New', monospace;
             font-weight: bold;
-            color: #2c3e50;
+            color: var(--dark-blue);
+        }
+        
+        .rank-1 {
+            background-color: rgba(255, 215, 0, 0.1) !important;
+        }
+        
+        .rank-2 {
+            background-color: rgba(192, 192, 198, 0.1) !important;
+        }
+        
+        .rank-3 {
+            background-color: rgba(205, 127, 50, 0.1) !important;
+        }
+
+        .debug-panel {
+            background: rgba(0,0,0,0.03);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-left: 4px solid var(--primary-green);
+        }
+        
+        .debug-title {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark-blue);
+        }
+        
+        .debug-title i {
+            font-size: 1.2rem;
+            color: var(--primary-green);
+        }
+        
+        .debug-content {
+            font-family: monospace;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow: auto;
+            white-space: pre;
+            font-size: 0.9rem;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .debug-status {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .status-ok {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--primary-green);
+        }
+        
+        .status-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-red);
+        }
+        
+        .debug-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .debug-button {
+            padding: 0.7rem 1.5rem;
+            background: var(--dark-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .debug-button:hover {
+            background: #1a2530;
+            transform: translateY(-2px);
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+            .tables-container {
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 900px) {
             .main-header h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
-
-            .block-title {
-                font-size: 1.6rem;
+            
+            .tabs-container {
+                gap: 0.4rem;
+                padding: 0.8rem;
             }
-
-            .content-block {
-                padding: 0 1rem;
+            
+            .tab-button {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
             }
-
+            
+            .table-section {
+                min-width: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 3rem 1.5rem;
+            }
+            
+            .main-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1rem;
+            }
+            
+            .tabs-container {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0.8rem 1rem;
+                scrollbar-width: thin;
+            }
+            
+            .tabs-container::-webkit-scrollbar {
+                height: 6px;
+            }
+            
+            .tabs-container::-webkit-scrollbar-thumb {
+                background: var(--primary-green);
+                border-radius: 3px;
+            }
+            
+            .tab-button {
+                flex-shrink: 0;
+                padding: 0.9rem 1.3rem;
+            }
+            
+            .tab-content {
+                padding: 0 1rem 2rem;
+            }
+            
+            .content-header h2 {
+                font-size: 1.9rem;
+            }
+            
+            .tables-container {
+                flex-direction: column;
+                gap: 1.8rem;
+            }
+            
             .table-section {
                 min-width: unset;
                 width: 100%;
+                padding: 1.8rem;
+            }
+            
+            table {
+                font-size: 1rem;
+            }
+            
+            .debug-status {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-header {
+                padding: 2.5rem 1rem;
+            }
+            
+            .main-header h1 {
+                font-size: 1.9rem;
+            }
+            
+            .tab-button {
+                padding: 0.8rem 1.1rem;
+                font-size: 0.95rem;
+            }
+            
+            .content-header h2 {
+                font-size: 1.7rem;
+            }
+            
+            .section-title {
+                font-size: 1.35rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
             }
         }
 
         /* Loading and Error States */
-        .loading {
-            color: #7f8c8d;
+        .content-loader {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
-
-        .error {
-            color: #e74c3c;
-            text-align: center;
-            padding: 1rem;
+        
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
             font-weight: 500;
         }
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: nowrap; 
-            overflow-x: auto;  
-            padding: 0 2rem;
-            margin: 3rem auto;
-        }
-
-        .nav-button {
-            background: linear-gradient(135deg, #4CAF50, #2c3e50);
-            color: white;
-            padding: 2rem;
-            border-radius: 12px;
+        
+        .error {
+            color: var(--error-red);
             text-align: center;
+            padding: 1.5rem;
+            font-weight: 500;
+            background: rgba(231, 76, 60, 0.05);
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            background: rgba(0,0,0,0.02);
+            margin-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .footer a {
+            color: var(--primary-green);
             text-decoration: none;
-            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        
+        .footer a:hover {
+            color: var(--dark-blue);
+            text-decoration: underline;
+        }
+        .sortable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 25px !important;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 120px;
         }
 
-        .nav-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        .sortable:hover {
+            background-color: rgba(76, 175, 80, 0.65) !important; /* Primary green with transparency */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
-        .button-description {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 0.5rem;
+        .sortable::after {
+            content: "↕";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
         }
+
+        .sortable.asc::after, 
+        .sortable.desc::after {
+            content: "↑";
+            opacity: 1;
+            color: #00ffff; 
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+        }
+
+        .sortable.desc::after {
+            content: "↓";
+        }
+
+        .sortable.asc, 
+        .sortable.desc {
+            color: #b3f0ff !important; 
+            text-shadow: 0 0 5px rgba(179, 240, 255, 0.5);
+        }
+        .summary-table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            margin-top: 1rem;
+            max-width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03) inset;
+        }
+        
+        #summary-table {
+            min-width: 1600px;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        
+        #summary-table th,
+        #summary-table td {
+            padding: 8px 10px;
+        }
+        
+        #summary-table .metric-header {
+            line-height: 1.3;
+            white-space: normal;
+        }
+        
+        #summary-table .metric-value {
+            text-align: center;
+        }
+
     </style>
 </head>
-
 <body>
     <header class="main-header">
         <h1>CodeSense Leaderboard</h1>
+        <p class="header-subtitle">Comprehensive evaluation of code understanding capabilities across multiple programming languages and tasks</p>
     </header>
 
-    <div class="nav-container">
-        <a href="statement.html" class="nav-button">
-            <div>
-                <div>Statement Accuracy</div>
-                <div class="button-description">Python & C Language Results</div>
-            </div>
-        </a>
-        
-        <a href="block.html" class="nav-button">
-            <div>
-                <div>Block Accuracy</div>
-                <div class="button-description">Code Block Analysis</div>
-            </div>
-        </a>
-
-        <a href="property.html" class="nav-button">
-            <div>
-                <div>Code Properties</div>
-                <div class="button-description">Alias, Branch & Loop Analysis</div>
-            </div>
-        </a>
-
-        <a href="io.html" class="nav-button">
-            <div>
-                <div>Input/Output</div>
-                <div class="button-description">Prediction Accuracy</div>
-            </div>
-        </a>
+    <div class="tabs-container">
+        <button class="tab-button active" data-tab="statement">
+            <i class="fas fa-code"></i> Statement Accuracy
+        </button>
+        <button class="tab-button" data-tab="block">
+            <i class="fas fa-cube"></i> Block Accuracy
+        </button>
+        <button class="tab-button" data-tab="property">
+            <i class="fas fa-sitemap"></i> Code Properties
+        </button>
+        <button class="tab-button" data-tab="io">
+            <i class="fas fa-exchange-alt"></i> Input/Output
+        </button>
+        <button class="tab-button" data-tab="summary">
+            <i class="fas fa-chart-bar"></i> Summary Results
+        </button>
     </div>
-</body>
-</html>
 
-<!-- <script>
-        // Enhanced loadCSV function to handle multiple formats
-        async function loadCSV(url, tableId, type = 'statement') {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    <div class="tab-content active" id="statement">
+        <div class="content-header">
+            <h2>Statement Accuracy</h2>
+            <!-- <p class="content-description">
+                Measures the accuracy of models in predicting the execution flow at the statement level. 
+                Evaluates how well models understand the sequential execution of code in Python and C.
+            </p> -->
+        </div>
+        <div class="tables-container">
+            <div class="table-section">
+                <h3 class="section-title"><i class="fab fa-python"></i> Python</h3>
+                <table id="statement-python-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-c"></i> C Language</h3>
+                <table id="statement-c-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="block">
+        <div class="content-header">
+            <h2>Block Accuracy</h2>
+            <!-- <p class="content-description">
+                Evaluates the ability of models to understand code at the block level. 
+                Measures accuracy in predicting the execution flow of code blocks in Python and C.
+            </p> -->
+        </div>
+        <div class="tables-container">
+            <div class="table-section">
+                <h3 class="section-title"><i class="fab fa-python"></i> Python</h3>
+                <table id="block-python-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Block 1<br>(1 Statement)</th>
+                            <th>Block 2<br>(2 Statement)</th>
+                            <th>Block 3<br>(3 Statement)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Python data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-c"></i> C Language</h3>
+                <table id="block-c-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Block 1<br>(1 Statement)</th>
+                            <th>Block 2<br>(2 Statement)</th>
+                            <th>Block 3<br>(3 Statement)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading C data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="tab-content" id="property">
+        <div class="content-header">
+            <h2>Code Properties Analysis</h2>
+            <!-- <p class="content-description">
+                Comprehensive analysis of model performance on code property tasks including alias analysis, 
+                branch prediction, and loop behavior understanding.
+            </p> -->
+        </div>
+        <div class="tables-container">
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-random"></i> Alias Analysis</h3>
+                <table id="alias-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Alias data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-code-branch"></i> Branch Analysis</h3>
+                <table id="branch-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="loading">Loading Branch data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-redo"></i> Loop Analysis</h3>
+                <table id="loop-results">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Iteration</th>
+                            <th>In-Loop</th>
+                            <th>Post-Loop</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading Loop data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+    <div class="tab-content" id="summary">
+        <div class="content-header">
+            <h2>Summary Results</h2>
+            <!-- <p class="content-description">
+                Comprehensive overview of model performance across all evaluation metrics
+            </p> -->
+        </div>
+        <div class="table-section summary-table-section">
+            <h3 class="section-title">
+                <i class="fas fa-table"></i> All Results
+                <i class="fas fa-info-circle info-icon" data-tooltip="Sort by clicking any column header"></i>
+            </h3>
+            <div class="summary-table-wrapper">
+                <table id="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th class="metric-header">Stmt<br>Python</th>
+                            <th class="metric-header">Stmt<br>C</th>
+                            <th class="metric-header">Block1<br>(Stmt 1)<br>Py</th>
+                            <th class="metric-header">Block2<br>(Stmt 2)<br>Py</th>
+                            <th class="metric-header">Block3<br>(Stmt 3)<br>Py</th>
+                            <th class="metric-header">Block1<br>(Stmt 1)<br>C</th>
+                            <th class="metric-header">Block2<br>(Stmt 2)<br>C</th>
+                            <th class="metric-header">Block3<br>(Stmt 3)<br>C</th>
+                            <th class="metric-header">Alias<br>Acc</th>
+                            <th class="metric-header">Branch<br>Pred</th>
+                            <th class="metric-header">Loop<br>Iter</th>
+                            <th class="metric-header">In<br>Loop</th>
+                            <th class="metric-header">Post<br>Loop</th>
+                            <th class="metric-header">Py<br>Output</th>
+                            <th class="metric-header">C<br>Output</th>
+                            <th class="metric-header">Java<br>Output</th>
+                            <th class="metric-header">Py<br>Input</th>
+                            <th class="metric-header">C<br>Input</th>
+                            <th class="metric-header">Java<br>Input</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="21" class="loading">Loading summary data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="io">
+        <div class="content-header">
+            <h2>Input/Output Prediction</h2>
+            <!-- <p class="content-description">
+                Evaluates model performance on predicting program outputs and required inputs. 
+                Measures accuracy across multiple programming languages including Python, C, and Java.
+            </p> -->
+        </div>
+        <div class="tables-container">
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-arrow-right"></i> Output Prediction</h3>
+                <table id="output-prediction">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Python</th>
+                            <th>C</th>
+                            <th>Java</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading Output data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-section">
+                <h3 class="section-title"><i class="fas fa-arrow-left"></i> Input Prediction</h3>
+                <table id="input-prediction">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Python</th>
+                            <th>C</th>
+                            <th>Java</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="loading">Loading Input data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!-- 
+    <div class="footer">
+        <p>CodeSense Benchmark &copy; 2025 | Comprehensive Evaluation of Code Understanding Models</p>
+        <p>Data sourced from <a href="https://codesense-bench.github.io/">CodeSense GitHub Repository</a></p>
+    </div> -->
+
+    <script>
+        // Global data storage and sorting state
+        const tableData = {};
+        const tableSortStates = {};
+        
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
                 
-                const csv = await response.text();
-                const rows = csv.split('\n').filter(row => row.trim());
-                const headers = rows.shift().split(',');
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
 
-                const tbody = document.querySelector(`#${tableId} tbody`);
-                const thCount = document.querySelectorAll(`#${tableId} thead th`).length;
-
-                tbody.innerHTML = rows.map(row => {
-                    const cells = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.trim());
+        // Function to initialize sorting states for a table
+        function initSortState(tableId, defaultSortKey, defaultDirection = 'desc') {
+            if (!tableSortStates[tableId]) {
+                tableSortStates[tableId] = {
+                    currentSortKey: defaultSortKey,
+                    direction: defaultDirection
+                };
+            }
+        }
+        
+        // Function to make table headers sortable
+        function makeTableSortable(tableId, columns) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            
+            const headers = table.querySelectorAll('thead th');
+            headers.forEach((header, index) => {
+                // Skip first two columns (Rank and Model)
+                if (index < 2) return;
+                
+                header.classList.add('sortable');
+                header.dataset.key = columns[index];
+                
+                header.addEventListener('click', () => {
+                    const sortKey = header.dataset.key;
+                    const currentState = tableSortStates[tableId];
                     
-                    switch(type) {
-                        case 'statement':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td>${cells[1]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'block':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'alias':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'loop':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        case 'io':
-                            return `
-                                <tr>
-                                    <td>${cells[0]}</td>
-                                    <td class="accuracy">${(parseFloat(cells[1]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[2]) * 100).toFixed(2)}%</td>
-                                    <td class="accuracy">${(parseFloat(cells[3]) * 100).toFixed(2)}%</td>
-                                </tr>
-                            `;
-                        default:
-                            return '';
+                    if (currentState.currentSortKey === sortKey) {
+                        currentState.direction = currentState.direction === 'asc' ? 'desc' : 'asc';
+                    } 
+                    else {
+                        currentState.currentSortKey = sortKey;
+                        currentState.direction = 'desc';
                     }
-                }).join('');
+                    
 
+                    headers.forEach(h => {
+                        h.classList.remove('asc', 'desc');
+                        if (h.dataset.key === sortKey) {
+                            h.classList.add(currentState.direction);
+                        }
+                    });
+                    
+                    populateTable(tableId, tableData[tableId], columns, 
+                                currentState.currentSortKey, currentState.direction);
+                });
+            });
+        }
+
+        function populateTable(tableId, data, columns, sortKey, sortDirection = 'desc') {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+            
+            // Sort the data
+            const sortedData = [...data].sort((a, b) => {
+                let valA = a[sortKey];
+                let valB = b[sortKey];
+                
+                // Convert percentage strings to numbers for comparison
+                if (typeof valA === 'string' && valA.includes('%')) {
+                    valA = parseFloat(valA);
+                    valB = parseFloat(valB);
+                }
+                
+                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            // Populate table rows
+            sortedData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Add rank classes for top 3
+                if (index < 3) {
+                    row.classList.add(`rank-${index + 1}`);
+                }
+                
+                columns.forEach(col => {
+                    const cell = document.createElement('td');
+                    cell.classList.add('metric-value');
+                    
+                    if (col === 'Rank') {
+                        cell.textContent = index + 1;
+                    } 
+                    else if (item[col] !== undefined) {
+                        const num = parseFloat(item[col]);
+                        if (!isNaN(num)) {
+                            if (num >= 0 && num <= 1) {
+                                cell.textContent = (num * 100).toFixed(2) + '%';
+                            } else {
+                                cell.textContent = num.toFixed(2) + '%';
+                            }
+                        } else {
+                            cell.textContent = item[col];
+                        }
+                    } else {
+                        cell.textContent = '-';
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Modified loadCSVData function with sorting initialization
+        async function loadCSVData(csvUrl, tableId, columns, defaultSortKey) {
+            try {
+                const table = document.getElementById(tableId);
+                const tbody = table.querySelector('tbody');
+                tbody.innerHTML = `<tr><td colspan="${columns.length}" class="loading">Loading data from ${csvUrl}...</td></tr>`;
+                
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error(`Failed to load CSV: ${response.status}`);
+                
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+                
+                // Store data for sorting
+                tableData[tableId] = data;
+                
+                // Initialize sorting state
+                initSortState(tableId, defaultSortKey);
+                
+                // Make table sortable
+                makeTableSortable(tableId, columns);
+                
+                // Populate table with initial sort
+                const sortState = tableSortStates[tableId];
+                populateTable(tableId, data, columns, sortState.currentSortKey, sortState.direction);
+                
             } catch (error) {
-                const tbody = document.querySelector(`#${tableId} tbody`);
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="${thCount}" class="error">
-                            ${error.message}<br>
-                            <small>Check: 1. File path 2. CSV format 3. Network connection</small>
-                        </td>
-                    </tr>`;
+                console.error(`Error loading ${csvUrl}:`, error);
+                const table = document.getElementById(tableId);
+                const tbody = table.querySelector('tbody');
+                tbody.innerHTML = `<tr><td colspan="${columns.length}" class="error">Error loading data: ${error.message}</td></tr>`;
             }
         }
 
-        // Load all data
-        window.addEventListener('DOMContentLoaded', () => {
-            // Statement Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_Python.csv', 'python-leaderboard', 'statement');
-            loadCSV('https://codesense-bench.github.io/Data/Statement_Accuracy_C.csv', 'c-leaderboard', 'statement');
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim() !== '');
+            if (lines.length < 2) {
+                throw new Error('CSV file is empty or has no data rows');
+            }
             
-            // Block Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_Python.csv', 'block-python', 'block');
-            loadCSV('https://codesense-bench.github.io/Data/Block_Accuracy_C.csv', 'block-c', 'block');
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
             
-            // Code Property Accuracy
-            loadCSV('https://codesense-bench.github.io/Data/alias_branch.csv', 'alias-branch', 'alias');
-            loadCSV('https://codesense-bench.github.io/Data/loop_results.csv', 'loop-results', 'loop');
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                if (values.length !== headers.length) {
+                    console.warn(`Row ${i} has ${values.length} columns, expected ${headers.length}. Skipping.`);
+                    continue;
+                }
+                
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index];
+                });
+                
+                data.push(row);
+            }
+            
+            return data;
+        }
 
-            loadCSV('https://codesense-bench.github.io/Data/output.csv', 'output-prediction', 'io');
-            loadCSV('https://codesense-bench.github.io/Data/input.csv', 'input-prediction', 'io');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCSVData('https://codesense-bench.github.io/Data/Statement_Accuracy_Python.csv', 'statement-python-table', 
+                        ['Rank', 'Model', 'accuracy'], 'accuracy');
+            loadCSVData('https://codesense-bench.github.io/Data/Statement_Accuracy_C.csv', 'statement-c-table', 
+                        ['Rank', 'Model', 'accuracy'], 'accuracy');
+            
+            loadCSVData('https://codesense-bench.github.io/Data/Block_Accuracy_Python.csv', 'block-python-table', 
+                        ['Rank', 'Model', 'Block 1 Accuracy', 'Block 2 Accuracy', 'Block 3 Accuracy'], 'Block 1 Accuracy');
+            loadCSVData('https://codesense-bench.github.io/Data/Block_Accuracy_C.csv', 'block-c-table', 
+                        ['Rank', 'Model', 'Block 1 Accuracy', 'Block 2 Accuracy', 'Block 3 Accuracy'], 'Block 1 Accuracy');
+            
+            loadCSVData('https://codesense-bench.github.io/Data/alias_branch.csv', 'alias-table', 
+                        ['Rank', 'Model', 'Alias accuracy'], 'Alias accuracy');
+            loadCSVData('https://codesense-bench.github.io/Data/branch.csv', 'branch-table', 
+                        ['Rank', 'Model', 'Branch Prediction'], 'Branch Prediction');
+            loadCSVData('https://codesense-bench.github.io/Data/loop_results.csv', 'loop-results', 
+                        ['Rank', 'Model', 'iteration', 'In-Loop', 'post-loop'], 'iteration');
+            
+            loadCSVData('https://codesense-bench.github.io/Data/output.csv', 'output-prediction', 
+                        ['Rank', 'Model', 'Python', 'C', 'Java'], 'Python');
+            loadCSVData('https://codesense-bench.github.io/Data/input.csv', 'input-prediction', 
+                        ['Rank', 'Model', 'Python', 'C', 'Java'], 'Python');
+
+            loadCSVData('https://codesense-bench.github.io/Data/all.csv', 'summary-table', 
+                ['Rank', 'Model', 
+                 'Stmt Accuracy Python', 'Stmt Accuracy C', 
+                 'Block 1 Accuracy Python', 'Block 2 Accuracy Python', 'Block 3 Accuracy Python',
+                 'Block 1 Accuracy C', 'Block 2 Accuracy C', 'Block 3 Accuracy C',
+                 'Alias accuracy', 'Branch Prediction', 
+                 'iteration', 'In-Loop', 'post-loop',
+                 'Python Output', 'C Output', 'Java Output',
+                 'Python Input', 'C Input', 'Java Input'], 
+                'Stmt Accuracy Python');
         });
     </script>
 </body>
-</html> -->
+</html>
