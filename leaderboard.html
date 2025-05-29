@@ -221,7 +221,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 0 auto;
-            font-size: 0.90rem;
+            font-size: 0.85rem;
         }
 
         th {
@@ -265,7 +265,7 @@
             color: var(--dark-blue);
         }
         
-        .rank-1 {
+        /*.rank-1 {
             background-color: rgba(255, 215, 0, 0.1) !important;
         }
         
@@ -275,7 +275,7 @@
         
         .rank-3 {
             background-color: rgba(205, 127, 50, 0.1) !important;
-        }
+        }*/
 
         .debug-panel {
             background: rgba(0,0,0,0.03);
@@ -636,7 +636,7 @@
         </div>
         <div class="tables-container">
             <div class="table-section">
-                <h3 class="section-title"><i class="fab fa-python"></i> Python</h3>
+                <h3 class="section-title">Python</h3>
                 <table id="statement-python-table">
                     <thead>
                         <tr>
@@ -653,7 +653,7 @@
                 </table>
             </div>
             <div class="table-section">
-                <h3 class="section-title"><i class="fas fa-c"></i> C Language</h3>
+                <h3 class="section-title">C Language</h3>
                 <table id="statement-c-table">
                     <thead>
                         <tr>
@@ -682,15 +682,15 @@
         </div>
         <div class="tables-container">
             <div class="table-section">
-                <h3 class="section-title"><i class="fab fa-python"></i> Python</h3>
+                <h3 class="section-title">Python</h3>
                 <table id="block-python-table">
                     <thead>
                         <tr>
                             <th>Rank</th>
                             <th>Model</th>
-                            <th>Block 1<br>(1 Statement)</th>
-                            <th>Block 2<br>(2 Statement)</th>
-                            <th>Block 3<br>(3 Statement)</th>
+                            <th>Block 1:<br>(1&nbsp;Statement)</th>
+                            <th>Block 2:<br>(2&nbsp;Statement)</th>
+                            <th>Block 3:<br>(3&nbsp;Statement)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -701,15 +701,15 @@
                 </table>
             </div>
             <div class="table-section">
-                <h3 class="section-title"><i class="fas fa-c"></i> C Language</h3>
+                <h3 class="section-title">C Language</h3>
                 <table id="block-c-table">
                     <thead>
                         <tr>
                             <th>Rank</th>
                             <th>Model</th>
-                            <th>Block 1<br>(1 Statement)</th>
-                            <th>Block 2<br>(2 Statement)</th>
-                            <th>Block 3<br>(3 Statement)</th>
+                            <th>Block 1:<br>(1&nbsp;Statement)</th>
+                            <th>Block 2:<br>(2&nbsp;Statement)</th>
+                            <th>Block 3:<br>(3&nbsp;Statement)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -733,7 +733,7 @@
         </div>
         <div class="tables-container">
             <div class="table-section">
-                <h3 class="section-title"><i class="fas fa-random"></i> Alias Analysis</h3>
+                <h3 class="section-title"><i class="fas fa-random"></i> Alias Detection</h3>
                 <table id="alias-table">
                     <thead>
                         <tr>
@@ -750,7 +750,7 @@
                 </table>
             </div>
             <div class="table-section">
-                <h3 class="section-title"><i class="fas fa-code-branch"></i> Branch Analysis</h3>
+                <h3 class="section-title"><i class="fas fa-code-branch"></i> Branch Prediction</h3>
                 <table id="branch-table">
                     <thead>
                         <tr>
@@ -1023,7 +1023,6 @@
             });
         }
         
-        // Modified loadCSVData function with sorting initialization
         async function loadCSVData(csvUrl, tableId, columns, defaultSortKey) {
             try {
                 const table = document.getElementById(tableId);
@@ -1036,16 +1035,12 @@
                 const csvText = await response.text();
                 const data = parseCSV(csvText);
                 
-                // Store data for sorting
                 tableData[tableId] = data;
                 
-                // Initialize sorting state
                 initSortState(tableId, defaultSortKey);
                 
-                // Make table sortable
                 makeTableSortable(tableId, columns);
                 
-                // Populate table with initial sort
                 const sortState = tableSortStates[tableId];
                 populateTable(tableId, data, columns, sortState.currentSortKey, sortState.direction);
                 
@@ -1086,6 +1081,41 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+
+        //     loadCSVData('./Data/Statement_Accuracy_Python.csv', 'statement-python-table', 
+        //                 ['Rank', 'Model', 'accuracy'], 'accuracy');
+        //     loadCSVData('./Data/Statement_Accuracy_C.csv', 'statement-c-table', 
+        //                 ['Rank', 'Model', 'accuracy'], 'accuracy');
+            
+        //     loadCSVData('./Data/Block_Accuracy_Python.csv', 'block-python-table', 
+        //                 ['Rank', 'Model', 'Block 1 Accuracy', 'Block 2 Accuracy', 'Block 3 Accuracy'], 'Block 1 Accuracy');
+        //     loadCSVData('./Data/Block_Accuracy_C.csv', 'block-c-table', 
+        //                 ['Rank', 'Model', 'Block 1 Accuracy', 'Block 2 Accuracy', 'Block 3 Accuracy'], 'Block 1 Accuracy');
+            
+        //     loadCSVData('./Data/alias_branch.csv', 'alias-table', 
+        //                 ['Rank', 'Model', 'Alias accuracy'], 'Alias accuracy');
+        //     loadCSVData('./Data/branch.csv', 'branch-table', 
+        //                 ['Rank', 'Model', 'Branch Prediction'], 'Branch Prediction');
+        //     loadCSVData('./Data/loop_results.csv', 'loop-results', 
+        //                 ['Rank', 'Model', 'iteration', 'In-Loop', 'post-loop'], 'iteration');
+            
+        //     loadCSVData('./Data/output.csv', 'output-prediction', 
+        //                 ['Rank', 'Model', 'Python', 'C', 'Java'], 'Python');
+        //     loadCSVData('./Data/input.csv', 'input-prediction', 
+        //                 ['Rank', 'Model', 'Python', 'C', 'Java'], 'Python');
+
+        //     loadCSVData('./Data/all.csv', 'summary-table', 
+        //         ['Rank', 'Model', 
+        //          'Stmt Accuracy Python', 'Stmt Accuracy C', 
+        //          'Block 1 Accuracy Python', 'Block 2 Accuracy Python', 'Block 3 Accuracy Python',
+        //          'Block 1 Accuracy C', 'Block 2 Accuracy C', 'Block 3 Accuracy C',
+        //          'Alias accuracy', 'Branch Prediction', 
+        //          'iteration', 'In-Loop', 'post-loop',
+        //          'Python Output', 'C Output', 'Java Output',
+        //          'Python Input', 'C Input', 'Java Input'], 
+        //         'Stmt Accuracy Python');
+        // });
+
             loadCSVData('https://codesense-bench.github.io/Data/Statement_Accuracy_Python.csv', 'statement-python-table', 
                         ['Rank', 'Model', 'accuracy'], 'accuracy');
             loadCSVData('https://codesense-bench.github.io/Data/Statement_Accuracy_C.csv', 'statement-c-table', 
